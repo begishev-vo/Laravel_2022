@@ -34,7 +34,7 @@
                 </div>
             </div>
         </div>
-    </div>'
+    </div>
 @empty
     <h1>Новостей нет</h1>
 @endforelse

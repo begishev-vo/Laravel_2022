@@ -21,10 +21,10 @@ Route::get('/', function () {
 });
 
 // new routes
-Route::group(['prefix' => 'admin', 'as' => 'admin.'], function () {
-    Route::resource('/admin/categories', AdminCategoryController::class);
+//Route::group(['prefix' => 'admin', 'as' => 'admin.'], function () {
+  //  Route::resource('/admin/categories', AdminCategoryController::class);
     Route::resource('/admin/news', AdminNewsController::class);
-});
+//});
 
 
 
