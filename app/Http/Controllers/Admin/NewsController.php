@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use function PHPUnit\Framework\returnArgument;
 
 class NewsController extends Controller
 {
@@ -25,7 +26,9 @@ class NewsController extends Controller
      */
     public function create()
     {
-        //
+
+
+        return view('admin.news.create');
     }
 
     /**
@@ -36,7 +39,11 @@ class NewsController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $request->validate([
+            'title' => ['required', 'string', 'min:5']
+        ]);
+        return response()->json($request->all(),201);
+       // dd($request->input('title', 'Default value'));
     }
 
     /**
