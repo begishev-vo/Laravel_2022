@@ -12,3 +12,9 @@
 @endsection
 @section('content')
 @endsection
+
+@push('js')
+    <script>
+        alert("Hello, categories");
+    </script>
+@endpush
