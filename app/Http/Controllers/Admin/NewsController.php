@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Models\News;
 use Illuminate\Http\Request;
 use function PHPUnit\Framework\returnArgument;
 
@@ -15,8 +16,21 @@ class NewsController extends Controller
      */
     public function index()
     {
-       // return "admin news";
-        return view('admin.news.index');
+       $model = new News();
+       $news = $model->getNews();
+      // dd($model->getNewsById(5));
+
+       // dd(
+        /*
+            \DB::table('categories')
+                ->join('news', 'news.category_id', '=', 'categories.id')
+                ->select('categories.*', 'news.title as newsTitle')
+                ->get() */
+      //  );
+
+       return view('admin.news.index', [
+           'newsList' => $news
+       ]);
     }
 
     /**
