@@ -3,10 +3,12 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\News\CreateRequest;
+use App\Http\Requests\News\EditRequest;
 use App\Models\Category;
 use App\Models\News;
 use Illuminate\Http\Request;
-use function PHPUnit\Framework\returnArgument;
+
 
 class NewsController extends Controller
 {
@@ -17,8 +19,12 @@ class NewsController extends Controller
      */
     public function index()
     {
-        $news = News::query()->select(
-            News::$availableFields)
+        $news = News::query()
+            ->whereHas('category', function ($query) {
+                $query->where('id', '<', 10);
+            })
+            ->with('category')
+           //  ->select(News::$availableFields)
             ->paginate(5);
 
        return view('admin.news.index', [
@@ -44,19 +50,13 @@ class NewsController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param CreateRequest $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(CreateRequest $request)
     {
-        $request->validate([
-            'title' => ['required', 'string', 'min:5']
-        ]);
 
-
-
-        $created = News::create(
-            $request->only(['category_id', 'title', 'author', 'status', 'description']) + [
+        $created = News::create($request->validated() + [
                 'slug' => \Str::slug($request->input('title'))
             ]
         );
@@ -89,22 +89,24 @@ class NewsController extends Controller
      */
     public function edit(News $news)
     {
+        $categories = Category::all();
         return view('admin.news.edit', [
-            'news' => $news
+            'news' => $news,
+            'categories' => $categories
         ]);
     }
 
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  News $news
+     * @param EditRequest $request
+     * @param News $news
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, News $news)
+    public function update(EditRequest $request, News $news)
     {
        /* */
-       $update = $news->fill($request->only(['category_id', 'title', 'author', 'status', 'description']) + [
+       $update = $news->fill($request->validated() + [
                'slug' => \Str::slug($request->input('title'))
            ])->save();
        if($update) {
